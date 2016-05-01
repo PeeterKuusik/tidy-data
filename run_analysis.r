@@ -42,9 +42,20 @@ names(dataset2) = c("Subject","Activity.ID",features[namesOK2,2])
 dataset2= merge(dataset2,activity_labels, by.x="Activity.ID", by.y="id")
 dataset2=dataset2[,c(2,1,69,3:68)]
 
+z = names(dataset2)
+z = gsub("mean()", z, replacement="Mean")
+z = gsub("std()",  z, replacement="Std")
+z = gsub("^t", z,replacement="Time")
+z = gsub("^f", z,replacement="Frequency")
+z = gsub("Acc",z, replacement="Accelerometer")
+z = gsub("Gyro", z,replacement="Gyroscope")
+z = gsub("Mag", z,replacement="Magnitude")
+z = gsub("BodyBody", z,replacement="Body")
+z= gsub("\\(|\\)", "", z)
+names(dataset2)= z
 "5. From the data set in step 4, creates a second, independent tidy data set
 with the average of each variable for each activity and each subject."
-z= names(dataset2)
+
 dataset2$Subject =as.factor(dataset2$Subject)                  
 dataset2$Activity = as.factor(dataset2$Activity)
 #collapse data by subject and activity
@@ -52,7 +63,7 @@ a= aggregate(dataset2, by=list(dataset2$Subject,dataset2$Activity),FUN=mean)
 a=a[,c(1,2,3,6:71)]
 names(a)<- z
 #write a fail
-write.csv(dataset2, file = "dataset2.txt",row.names = FALSE)
-write.csv(a, file = "a.txt",row.names = FALSE)
+write.table(dataset2, file = "dataset2.txt",row.names = FALSE)
+write.table(a, file = "a.txt",row.names = FALSE)
 
 "End of line"
